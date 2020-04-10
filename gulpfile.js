@@ -28,7 +28,7 @@ gulp.task('js', function(){
         'app/js/webfontloader-1.6.28.js',
         'app/js/jquery.maskedinput-1.4.1.js',
         'app/js/jquery.modal-0.9.2.js',
-        'app/js/owl.carousel.min.js',
+        'app/js/slick.min.js',
         'app/js/lazysizes-5.2.0.js',
         'app/js/custom.js'
     ], {allowEmpty: true})

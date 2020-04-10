@@ -1,3 +1,14 @@
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+            
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+        document.getElementsByTagName('header')[0].classList.add('shrink');
+    } else {
+        document.getElementsByTagName('header')[0].classList.remove('shrink');
+    }
+}
+
 if (window.jQuery){
 	jQuery.noConflict();
 	jQuery(document).ready(function($){
@@ -8,31 +19,17 @@ if (window.jQuery){
 				urls: ['css/fonts.css']
 			}
         });
-
-        window.onscroll = function() {scrollFunction()};
-
-        function scrollFunction() {
-            
-            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-                //alert('shrink');
-                document.getElementsByTagName('header')[0].classList.add('shrink');
-            } else {
-                //alert('unshrink');
-                document.getElementsByTagName('header')[0].classList.remove('shrink');
-            }
-        }
         
         $('[type=tel]').mask('+7 (999) 999-99-99');
-		
-		$('.navbar-toggler').on('click', function(e){
-            $('header .menu').toggleClass("show-mobile");
-            e.preventDefault();
-        });
 
-        $(document).click(function(event){
-            if (!$(event.target).hasClass("navbar-toggler") && !$(event.target).closest(".navbar-toggler").length>0 && !$(event.target).closest(".show-mobile").length>0 && $('header .menu').hasClass('show-mobile')){
-                $('header .menu').removeClass("show-mobile");
-            }
+        // navbar dropdown
+
+		$(".navbar-toggler").on("click", function() {
+			$(this).attr('aria-expanded', function(index, attr){
+				return attr == 'false' ? 'true' : 'false';
+			});
+			$(".navbar-collapse").toggleClass('show');
+			$(this).parent().toggleClass('menu-opened');
 		});
 		
 		$(".back-top").click(function(b){
@@ -46,8 +43,9 @@ if (window.jQuery){
 			var showIt =  $(this).attr('href');
 			$(".tab-pane").hide();
 			$('#prev-' + showIt + '-group').css('display', 'flex');
-			$('#next-' + showIt + '-group').css('display', 'flex');
-			$(showIt).css('display', 'flex');
+            $('#next-' + showIt + '-group').css('display', 'flex');
+            $(".tab-pane").removeClass('active');
+			$(showIt).addClass('active').find('.slick-slider').slick('refresh');
 		});
 		
 		$('.faq__list-item__question').click(function(){
@@ -55,62 +53,71 @@ if (window.jQuery){
 			return false;
         });
 
-        $('.rollup__slider').owlCarousel({
-            items: 1,
-            loop: true,
-            nav: true,
-            navText: [
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg>',
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg>'
-            ],
+        $('.rollup__slider').slick({
+            rows: 0,
+            variableWidth: true,
+            prevArrow: '<button type="button" class="slick-prev"><svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg></button>',
+            nextArrow: '<button type="button" class="slick-next"><svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg></button>',
         });
         
-        $('.types__tabs-content__colors').owlCarousel({
-            items: 8,
-            loop: true,
-            nav: true,
-            navText: [
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg>',
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg>'
-            ],
+        $('.types__tabs-content__colors').slick({
+            slidesToShow: 8,
+            infinite: true,
+            rows: 0,
+            variableWidth: false,
+            prevArrow: '<button type="button" class="slick-prev"><svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg></button>',
+            nextArrow: '<button type="button" class="slick-next"><svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg></button>',
         });
 
-        $('.why__content-slides').owlCarousel({
-            items: 1,
-            nav: true,
-            navText: [
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg>',
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg>'
-            ],
-            onInitialized: counter,
-            onTranslated: counter
-        });
-
-        function counter(event) {
-            var element   = event.target;
-            var items     = event.item.count;
-            var item      = event.item.index + 1;
-            
-            // it loop is true then reset counter from 1
-            if(item > items) {
-                item = item - items
-            }
-            if(!$('.why__content-slides .owl-nav .nav-counter').length){
-                $('.why__content-slides .owl-nav button:first').after('<div class="nav-counter"></div>');
-            }
-            var counter_html = item + "/" + items;
-            $('.why__content-slides .owl-nav .nav-counter').html(counter_html);
-        }
+        var $status = $('#counter .nav-counter');
+        var $slickElement = $('.why__content-slides');
         
-        $('.reviews__slider').owlCarousel({
-            items: 7,
-            loop: true,
-            margin: 14,
-            nav: true,
-            navText: [
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg>',
-                '<svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg>'
-            ],
+        $slickElement.on('init reInit afterChange', function(event, slick, currentSlide, nextSlide){
+            var i = (currentSlide ? currentSlide : 0) + 1;
+            $status.text(i + '/' + slick.slideCount);
+        });
+
+        $slickElement.slick({
+            adaptiveHeight: true,
+            infinite: false,
+            rows: 0,
+            variableWidth: true,
+            appendArrows: $('#counter'),
+            prevArrow: '<button type="button" class="slick-prev"><svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg></button>',
+            nextArrow: '<button type="button" class="slick-next"><svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg></button>',
+        });
+        
+        $('.reviews__slider').slick({
+            slidesToShow: 7,
+            __margin: 14,
+            prevArrow: '<button type="button" class="slick-prev"><svg viewBox="0 0 6 10.5" class="icon arrow-left" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-left"></use></svg></button>',
+            nextArrow: '<button type="button" class="slick-next"><svg viewBox="0 0 6 10.5" class="icon arrow-right" width="5" height="8"><use xlink:href="img/sprite.svg#arrow-right"></use></svg></button>',
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 6,
+                }
+            }, {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 4,
+                }
+            }, {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 3,
+                }
+            }, {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 2,
+                }
+            }, {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                }
+            }]
         });
 
         $('.types__tabs-content__colors-item').on('click', function(e){
@@ -118,6 +125,8 @@ if (window.jQuery){
             $(this).toggleClass('selected');
             e.preventDefault();
         });
+
+        // yandex map constructor
 
         var t = $(window),
             n = t.height(),
@@ -187,4 +196,3 @@ if (window.jQuery){
 
     });
 };
-
